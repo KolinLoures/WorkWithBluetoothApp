@@ -21,7 +21,8 @@
         app:fabSize="normal"
         android:src="@drawable/ic_youtube_searched_for_black_24dp"
         android:layout_gravity="bottom|right"
-        android:elevation="4dp"/>
+        android:elevation="4dp"
+        android:id="@+id/fab" />
 
 
 </FrameLayout>

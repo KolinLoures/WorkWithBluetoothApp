@@ -6,6 +6,7 @@ import android.app.Application;
  * Created by n.kirilov on 21.06.2016.
  */
 public class App extends Application {
+
     private static AppComponent component;
 
     public static AppComponent getComponent(){
