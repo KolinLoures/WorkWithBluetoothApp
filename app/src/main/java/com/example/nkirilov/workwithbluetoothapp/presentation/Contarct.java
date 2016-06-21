@@ -25,6 +25,8 @@ public interface Contarct {
         void clickFab();
 
         void updateFabSrc();
+
+        void clearResult();
     }
 
 }

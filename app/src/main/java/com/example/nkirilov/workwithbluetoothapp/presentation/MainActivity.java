@@ -53,16 +53,29 @@ public class MainActivity extends AppCompatActivity implements Contarct.View {
 
     @Override
     public void clickFab() {
-        presenter.onScanClick();
+        if (presenter.isScanning()){
+            presenter.unsub();
+            clearResult();
+        } else {
+            adapter.clearResults();
+            presenter.onScanClick();
+        }
     }
 
     @Override
     public void updateFabSrc() {
         if (presenter.isScanning()){
             fab.setImageResource(R.drawable.ic_highlight_off_black_24dp);
-        } else {
+        }
+        if (!presenter.isScanning()){
             fab.setImageResource(R.drawable.ic_youtube_searched_for_black_24dp);
         }
+    }
+
+    @Override
+    public void clearResult() {
+        presenter.clearSubscription();
+        updateFabSrc();
     }
 
     @Override

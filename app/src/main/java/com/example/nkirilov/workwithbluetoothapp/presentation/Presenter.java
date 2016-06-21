@@ -46,7 +46,7 @@ public class Presenter implements Contarct.Presenter {
                     .doOnSubscribe(new Action0() {
                         @Override
                         public void call() {
-                            clearSubscription();
+                            view.clearResult();
                         }
                     })
                     .subscribe(new Action1<RxBleScanResult>() {
@@ -62,6 +62,7 @@ public class Presenter implements Contarct.Presenter {
     @Override
     public void clearSubscription() {
         scanSubscription = null;
+
     }
 
     @Override
