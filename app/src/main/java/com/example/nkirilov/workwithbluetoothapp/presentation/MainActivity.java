@@ -1,7 +1,9 @@
-package com.example.nkirilov.workwithbluetoothapp;
+package com.example.nkirilov.workwithbluetoothapp.presentation;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+
+import com.example.nkirilov.workwithbluetoothapp.R;
 
 public class MainActivity extends AppCompatActivity {
 
