@@ -1,6 +1,8 @@
 package com.example.nkirilov.workwithbluetoothapp.domain;
 
 import com.example.nkirilov.workwithbluetoothapp.App;
+import com.example.nkirilov.workwithbluetoothapp.data.device.CmdBraceletVibro;
+import com.example.nkirilov.workwithbluetoothapp.data.device.CmdCommunicationStart;
 import com.polidea.rxandroidble.RxBleDevice;
 import com.polidea.rxandroidble.RxBleScanResult;
 
@@ -29,5 +31,19 @@ public class IntetactorImpl implements Interactor{
     @Override
     public RxBleDevice getDevice(String macAddress) {
         return repository.getDevice(macAddress);
+    }
+
+    @Override
+    public byte[] getCmdBraceletVibroByte() {
+        CmdBraceletVibro cmdBraceletVibro = repository.getCmdBraceletVibro();
+        byte[] array = cmdBraceletVibro.getWriteValue();
+        return array;
+    }
+
+    @Override
+    public byte[] getCmdCommStartByte() {
+        CmdCommunicationStart cmdCommunicationStart = repository.getCmdCommunicationStart();
+        byte[] array = cmdCommunicationStart.getWriteValue();
+        return array;
     }
 }

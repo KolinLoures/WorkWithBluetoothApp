@@ -1,5 +1,7 @@
 package com.example.nkirilov.workwithbluetoothapp.domain;
 
+import com.example.nkirilov.workwithbluetoothapp.data.device.CmdBraceletVibro;
+import com.example.nkirilov.workwithbluetoothapp.data.device.CmdCommunicationStart;
 import com.polidea.rxandroidble.RxBleDevice;
 import com.polidea.rxandroidble.RxBleScanResult;
 
@@ -12,4 +14,8 @@ public interface IRepository {
     Observable<RxBleScanResult> scanDevices();
 
     RxBleDevice getDevice(String macAddress);
+
+    CmdBraceletVibro getCmdBraceletVibro();
+
+    CmdCommunicationStart getCmdCommunicationStart();
 }

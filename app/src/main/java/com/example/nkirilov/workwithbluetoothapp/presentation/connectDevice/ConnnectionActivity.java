@@ -19,7 +19,12 @@ public class ConnnectionActivity extends AppCompatActivity implements ContractCo
     ContractConnect.ConnPresenter presenter;
 
     private TextView connText;
+    private TextView textStatus;
+    private TextView textOut;
     private Button btnConnect;
+    private Button btnStart;
+    private Button btnVibro;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,7 +34,11 @@ public class ConnnectionActivity extends AppCompatActivity implements ContractCo
         App.getComponent().inject(this);
 
         connText = (TextView) findViewById(R.id.connectionState);
+        textStatus = (TextView) findViewById(R.id.textStatus);
+        textOut = (TextView) findViewById(R.id.textOut);
         btnConnect = (Button) findViewById(R.id.reConnect);
+        btnStart = (Button) findViewById(R.id.startBtn);
+        btnVibro = (Button) findViewById(R.id.vibroBtn);
 
         presenter.setView(this);
         final String mac = getIntent().getStringExtra("MAC");
@@ -48,6 +57,21 @@ public class ConnnectionActivity extends AppCompatActivity implements ContractCo
                 }
             }
         });
+
+        btnStart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                presenter.onClickStartCommucation();
+            }
+        });
+
+        btnVibro.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                presenter.onClickVibroCmd();
+            }
+        });
+
     }
 
     @Override
@@ -65,5 +89,15 @@ public class ConnnectionActivity extends AppCompatActivity implements ContractCo
     @Override
     public void setTextConn(String s) {
         connText.setText(s);
+    }
+
+    @Override
+    public void setTextStatus(String s) {
+        textStatus.setText(s);
+    }
+
+    @Override
+    public void setOutText(String s) {
+        textOut.setText(s);
     }
 }

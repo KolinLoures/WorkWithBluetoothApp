@@ -25,11 +25,23 @@ public interface ContractConnect {
         void setView(ContractConnect.ConnView view);
 
         void connListener();
-    }
+
+        void startWriteCommucation(byte[] b);
+
+        void startReadCommucation();
+
+        void onClickStartCommucation();
+
+        void onClickVibroCmd();
+}
 
     interface ConnView{
         void updateUI();
 
         void setTextConn(String s);
+
+        void setTextStatus(String s);
+
+        void setOutText(String s);
     }
 }

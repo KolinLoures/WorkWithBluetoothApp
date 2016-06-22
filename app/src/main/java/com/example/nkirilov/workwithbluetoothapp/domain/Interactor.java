@@ -12,4 +12,8 @@ public interface Interactor {
     Observable<RxBleScanResult> scanningDevices();
 
     RxBleDevice getDevice(String macAddress);
+
+    byte[] getCmdBraceletVibroByte();
+
+    byte[] getCmdCommStartByte();
 }
