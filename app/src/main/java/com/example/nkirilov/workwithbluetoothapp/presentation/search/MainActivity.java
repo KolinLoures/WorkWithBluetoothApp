@@ -1,5 +1,6 @@
-package com.example.nkirilov.workwithbluetoothapp.presentation;
+package com.example.nkirilov.workwithbluetoothapp.presentation.search;
 
+import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -9,7 +10,7 @@ import android.view.View;
 
 import com.example.nkirilov.workwithbluetoothapp.App;
 import com.example.nkirilov.workwithbluetoothapp.R;
-import com.polidea.rxandroidble.RxBleDevice;
+import com.example.nkirilov.workwithbluetoothapp.presentation.connectDevice.ConnnectionActivity;
 import com.polidea.rxandroidble.RxBleScanResult;
 
 import javax.inject.Inject;
@@ -33,8 +34,16 @@ public class MainActivity extends AppCompatActivity implements Contarct.View {
 
         adapter = new Adapter();
 
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+        final RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        adapter.setOnAdapterItemClickListener(new Adapter.OnAdapterItemClickListener() {
+            @Override
+            public void onAdapterClick(View view) {
+                int positionAdapter = recyclerView.getChildAdapterPosition(view);
+                RxBleScanResult item = adapter.getItemAtPosition(positionAdapter);
+                onAdapterItemClick(item);
+            }
+        });
         recyclerView.setAdapter(adapter);
 
         fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -45,6 +54,7 @@ public class MainActivity extends AppCompatActivity implements Contarct.View {
             }
         });
     }
+
 
     @Override
     public void showResult(RxBleScanResult result) {
@@ -76,6 +86,14 @@ public class MainActivity extends AppCompatActivity implements Contarct.View {
     public void clearResult() {
         presenter.clearSubscription();
         updateFabSrc();
+    }
+
+    @Override
+    public void onAdapterItemClick(RxBleScanResult results) {
+        String macAddress = results.getBleDevice().getMacAddress();
+        Intent intent = new Intent(this, ConnnectionActivity.class);
+        intent.putExtra("MAC", macAddress);
+        startActivity(intent);
     }
 
     @Override

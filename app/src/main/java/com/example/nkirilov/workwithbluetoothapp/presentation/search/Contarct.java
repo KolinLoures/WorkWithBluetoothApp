@@ -1,4 +1,4 @@
-package com.example.nkirilov.workwithbluetoothapp.presentation;
+package com.example.nkirilov.workwithbluetoothapp.presentation.search;
 
 import com.polidea.rxandroidble.RxBleScanResult;
 
@@ -27,6 +27,8 @@ public interface Contarct {
         void updateFabSrc();
 
         void clearResult();
+
+        void onAdapterItemClick(RxBleScanResult results);
     }
 
 }

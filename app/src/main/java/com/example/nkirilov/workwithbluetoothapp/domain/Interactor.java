@@ -1,5 +1,6 @@
 package com.example.nkirilov.workwithbluetoothapp.domain;
 
+import com.polidea.rxandroidble.RxBleDevice;
 import com.polidea.rxandroidble.RxBleScanResult;
 
 import rx.Observable;
@@ -9,4 +10,6 @@ import rx.Observable;
  */
 public interface Interactor {
     Observable<RxBleScanResult> scanningDevices();
+
+    RxBleDevice getDevice(String macAddress);
 }

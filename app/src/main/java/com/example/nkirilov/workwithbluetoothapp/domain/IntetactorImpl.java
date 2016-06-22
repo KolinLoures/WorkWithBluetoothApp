@@ -1,6 +1,7 @@
 package com.example.nkirilov.workwithbluetoothapp.domain;
 
 import com.example.nkirilov.workwithbluetoothapp.App;
+import com.polidea.rxandroidble.RxBleDevice;
 import com.polidea.rxandroidble.RxBleScanResult;
 
 import javax.inject.Inject;
@@ -23,5 +24,10 @@ public class IntetactorImpl implements Interactor{
     @Override
     public Observable<RxBleScanResult> scanningDevices() {
         return repository.scanDevices();
+    }
+
+    @Override
+    public RxBleDevice getDevice(String macAddress) {
+        return repository.getDevice(macAddress);
     }
 }

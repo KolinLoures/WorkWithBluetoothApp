@@ -5,9 +5,11 @@ import com.example.nkirilov.workwithbluetoothapp.data.RxBleSingleton;
 import com.example.nkirilov.workwithbluetoothapp.data.dataModule.DataModule;
 import com.example.nkirilov.workwithbluetoothapp.domain.IntetactorImpl;
 import com.example.nkirilov.workwithbluetoothapp.domain.domainModule.DomainModule;
-import com.example.nkirilov.workwithbluetoothapp.presentation.Adapter;
-import com.example.nkirilov.workwithbluetoothapp.presentation.MainActivity;
-import com.example.nkirilov.workwithbluetoothapp.presentation.Presenter;
+import com.example.nkirilov.workwithbluetoothapp.presentation.connectDevice.ConnectionPresenter;
+import com.example.nkirilov.workwithbluetoothapp.presentation.connectDevice.ConnnectionActivity;
+import com.example.nkirilov.workwithbluetoothapp.presentation.search.Adapter;
+import com.example.nkirilov.workwithbluetoothapp.presentation.search.MainActivity;
+import com.example.nkirilov.workwithbluetoothapp.presentation.search.Presenter;
 import com.example.nkirilov.workwithbluetoothapp.presentation.presentationModule.PresentationModule;
 
 import javax.inject.Singleton;
@@ -37,4 +39,8 @@ public interface AppComponent {
         void inject(Adapter adapter);
 
         void inject(MainActivity mainActivity);
+
+        void inject(ConnectionPresenter connectionPresenter);
+
+        void inject(ConnnectionActivity activity);
 }

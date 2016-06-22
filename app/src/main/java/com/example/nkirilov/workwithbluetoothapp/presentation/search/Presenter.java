@@ -1,7 +1,4 @@
-package com.example.nkirilov.workwithbluetoothapp.presentation;
-
-import android.content.Context;
-import android.support.v4.media.VolumeProviderCompat;
+package com.example.nkirilov.workwithbluetoothapp.presentation.search;
 
 import com.example.nkirilov.workwithbluetoothapp.App;
 import com.example.nkirilov.workwithbluetoothapp.domain.Interactor;

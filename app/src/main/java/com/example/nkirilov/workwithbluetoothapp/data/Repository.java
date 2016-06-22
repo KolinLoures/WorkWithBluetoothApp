@@ -3,6 +3,7 @@ package com.example.nkirilov.workwithbluetoothapp.data;
 import com.example.nkirilov.workwithbluetoothapp.App;
 import com.example.nkirilov.workwithbluetoothapp.domain.IRepository;
 import com.polidea.rxandroidble.RxBleClient;
+import com.polidea.rxandroidble.RxBleDevice;
 import com.polidea.rxandroidble.RxBleScanResult;
 
 import javax.inject.Inject;
@@ -25,5 +26,10 @@ public class Repository implements IRepository {
     @Override
     public Observable<RxBleScanResult> scanDevices() {
         return rxBleClient.scanBleDevices();
+    }
+
+    @Override
+    public RxBleDevice getDevice(String macAddress) {
+        return rxBleClient.getBleDevice(macAddress);
     }
 }

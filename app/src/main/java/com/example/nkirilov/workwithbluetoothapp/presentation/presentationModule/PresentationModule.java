@@ -1,7 +1,9 @@
 package com.example.nkirilov.workwithbluetoothapp.presentation.presentationModule;
 
-import com.example.nkirilov.workwithbluetoothapp.presentation.Contarct;
-import com.example.nkirilov.workwithbluetoothapp.presentation.Presenter;
+import com.example.nkirilov.workwithbluetoothapp.presentation.connectDevice.ConnectionPresenter;
+import com.example.nkirilov.workwithbluetoothapp.presentation.connectDevice.ContractConnect;
+import com.example.nkirilov.workwithbluetoothapp.presentation.search.Contarct;
+import com.example.nkirilov.workwithbluetoothapp.presentation.search.Presenter;
 
 import javax.inject.Singleton;
 
@@ -18,6 +20,12 @@ public class PresentationModule {
     @Singleton
     Contarct.Presenter providesPresenter(){
         return new Presenter();
+    }
+
+    @Provides
+    @Singleton
+    ContractConnect.ConnPresenter connectionPresenter(){
+        return new ConnectionPresenter();
     }
 
 }

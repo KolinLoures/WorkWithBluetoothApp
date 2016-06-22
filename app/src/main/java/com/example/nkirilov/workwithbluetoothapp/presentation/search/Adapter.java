@@ -1,4 +1,4 @@
-package com.example.nkirilov.workwithbluetoothapp.presentation;
+package com.example.nkirilov.workwithbluetoothapp.presentation.search;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -26,9 +26,18 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
     Context context;
 
     private final List<RxBleScanResult> list = new ArrayList<>();
+    private static OnAdapterItemClickListener onAdapterItemClickListener;
 
     public Adapter() {
         App.getComponent().inject(this);
+    }
+
+    public interface OnAdapterItemClickListener{
+        void onAdapterClick(View view);
+    }
+
+    public void setOnAdapterItemClickListener(OnAdapterItemClickListener o){
+        this.onAdapterItemClickListener = o;
     }
 
     @Override
@@ -50,6 +59,10 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
     @Override
     public int getItemCount() {
         return list.size();
+    }
+
+    public RxBleScanResult getItemAtPosition(int childAdapterPosition) {
+        return list.get(childAdapterPosition);
     }
 
     public void addScanResult(RxBleScanResult result){
@@ -76,11 +89,20 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
         TextView textView1;
         TextView textView2;
 
-        public ViewHolder(View itemView) {
+        public ViewHolder(final View itemView) {
             super(itemView);
 
             textView1 = (TextView) itemView.findViewById(R.id.textView);
             textView2 = (TextView) itemView.findViewById(R.id.textView2);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (onAdapterItemClickListener!=null){
+                        onAdapterItemClickListener.onAdapterClick(itemView);
+                    }
+                }
+            });
         }
     }
 }

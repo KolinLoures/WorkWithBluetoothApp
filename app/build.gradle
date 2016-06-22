@@ -37,4 +37,6 @@ dependencies {
 
     compile "com.polidea.rxandroidble:rxandroidble:1.0.1"
 
+
+
 }
