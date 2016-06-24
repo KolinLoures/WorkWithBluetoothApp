@@ -42,33 +42,34 @@ public class ConnnectionActivity extends AppCompatActivity implements ContractCo
 
         presenter.setView(this);
         final String mac = getIntent().getStringExtra("MAC");
-        presenter.connectBleDevice(mac);
 
+        presenter.createBleDevice(mac);
         presenter.connListener();
 
         btnConnect.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (presenter.isConnected()){
+                if (presenter.isConnected()) {
                     presenter.triggerDisconnect();
-                    presenter.clearSub();
-                } else {
-                    presenter.connectBleDevice(mac);
                 }
+                else {
+                    presenter.createBleDevice(mac);
+                }
+                updateUI();
             }
         });
 
         btnStart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                presenter.onClickStartCommucation();
+                    presenter.onClickStartCommucation();
             }
         });
 
         btnVibro.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                presenter.onClickVibroCmd();
+                    presenter.onClickVibroCmd();
             }
         });
 
@@ -79,10 +80,14 @@ public class ConnnectionActivity extends AppCompatActivity implements ContractCo
         if (presenter.isConnected()){
             btnConnect.setText("Disconnect");
             connText.setTextColor(Color.GREEN);
+            textStatus.setText("");
+            textOut.setText("");
         }
         if (!presenter.isConnected()){
             btnConnect.setText("Connect");
             connText.setTextColor(Color.RED);
+            textStatus.setText("");
+            textOut.setText("");
         }
     }
 

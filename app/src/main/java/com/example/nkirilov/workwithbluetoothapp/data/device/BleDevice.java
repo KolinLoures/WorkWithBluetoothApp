@@ -18,6 +18,7 @@ public class BleDevice {
     }
 
     private void createLastByte() {
+        writeValue[15] = 0;
         for (int i = 0; i < this.writeValue.length - 1; i++) {
             this.writeValue[15] += this.writeValue[i];
         }

@@ -9,6 +9,7 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
+import rx.subjects.PublishSubject;
 
 /**
  * Created by n.kirilov on 21.06.2016.
@@ -26,6 +27,12 @@ public class PresentationModule {
     @Singleton
     ContractConnect.ConnPresenter connectionPresenter(){
         return new ConnectionPresenter();
+    }
+
+    @Provides
+    @Singleton
+    PublishSubject<Void> providesTriggerSubject(){
+        return PublishSubject.create();
     }
 
 }

@@ -8,7 +8,9 @@ import com.polidea.rxandroidble.RxBleConnection;
 public interface ContractConnect {
 
     interface ConnPresenter {
-        void connectBleDevice(String macAddress);
+        void createBleDevice(String macAddress);
+
+        void connectBleDevice();
 
         boolean isConnected();
 
