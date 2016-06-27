@@ -14,7 +14,6 @@ import java.util.Arrays;
 
 import javax.inject.Inject;
 
-import rx.Notification;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action0;
@@ -159,26 +158,6 @@ public class ConnectionPresenter implements ContractConnect.ConnPresenter {
     @Override
     public void startReadCommucation(){
         if (isConnected()) {
-//            connectionObservable.flatMap(new Func1<RxBleConnection, Observable<byte[]>>() {
-//                        @Override
-//                        public Observable<byte[]> call(RxBleConnection rxBleConnection) {
-//                            return rxBleConnection
-//                                    .readCharacteristic(BleDevice.characteristicRead);
-//                        }
-//                    })
-//                    .observeOn(AndroidSchedulers.mainThread())
-//                    .subscribe(new Action1<byte[]>() {
-//                        @Override
-//                        public void call(byte[] bytes) {
-//                            view.setOutText(Arrays.toString(bytes));
-//                        }
-//                    }, new Action1<Throwable>() {
-//                        @Override
-//                        public void call(Throwable throwable) {
-//                            view.setOutText("!!!Read Fail!!!");
-//                        }
-//                    });
-
             connectionObservable
                     .flatMap(new Func1<RxBleConnection, Observable<Observable<byte[]>>>() {
                         @Override
@@ -212,15 +191,15 @@ public class ConnectionPresenter implements ContractConnect.ConnPresenter {
     @Override
     public void onClickStartCommucation() {
         Log.i("Start", "Start работай");
-        startWriteCommucation(interactor.getCmdCommStartByte());
         startReadCommucation();
+        startWriteCommucation(interactor.getCmdCommStartByte());
     }
 
     @Override
     public void onClickVibroCmd() {
         Log.i("Vibro", "Vibro работай");
-        startWriteCommucation(interactor.getCmdBraceletVibroByte());
         startReadCommucation();
+        startWriteCommucation(interactor.getCmdBraceletVibroByte());
     }
 
 

@@ -3,6 +3,7 @@ package com.example.nkirilov.workwithbluetoothapp.data;
 import android.content.Context;
 
 import com.polidea.rxandroidble.RxBleClient;
+import com.polidea.rxandroidble.internal.RxBleLog;
 
 import javax.inject.Singleton;
 
@@ -22,7 +23,9 @@ public class RxBleSingleton {
     @Provides
     public static RxBleClient getInstanse(Context context){
         if (rxBleClient == null){
-            rxBleClient = RxBleClient.create(context);
+            rxBleClient = RxBleClient
+                    .create(context);
+            rxBleClient.setLogLevel(RxBleLog.DEBUG);
         }
         return rxBleClient;
     }
