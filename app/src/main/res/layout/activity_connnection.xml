@@ -53,12 +53,21 @@
         android:layout_below="@+id/connectionState"
         android:layout_alignParentStart="true" />
 
-    <TextView
+    <ScrollView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Large Text"
-        android:id="@+id/textOut"
-        android:layout_centerVertical="true"
-        android:layout_alignParentStart="true" />
+        android:id="@+id/scrollView"
+        android:layout_below="@+id/textStatus"
+        android:layout_alignParentStart="true"
+        android:layout_above="@+id/startBtn"
+        android:layout_alignParentEnd="true" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Large Text"
+            android:id="@+id/textOut"
+            android:layout_centerVertical="true"
+            android:layout_alignParentStart="true" />
+    </ScrollView>
 </RelativeLayout>

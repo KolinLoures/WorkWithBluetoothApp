@@ -72,6 +72,7 @@ public class ConnnectionActivity extends AppCompatActivity implements ContractCo
                     presenter.onClickVibroCmd();
             }
         });
+//        btnVibro.setEnabled(false);
 
     }
 
@@ -103,6 +104,7 @@ public class ConnnectionActivity extends AppCompatActivity implements ContractCo
 
     @Override
     public void setOutText(String s) {
-        textOut.setText(s);
+        String ss = (String) textOut.getText();
+        textOut.setText(ss+"\n"+s);
     }
 }

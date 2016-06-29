@@ -2,6 +2,9 @@ package com.example.nkirilov.workwithbluetoothapp.presentation.connectDevice;
 
 import com.polidea.rxandroidble.RxBleConnection;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+
 /**
  * Created by n.kirilov on 22.06.2016.
  */
@@ -28,7 +31,7 @@ public interface ContractConnect {
 
         void connListener();
 
-        void startWriteCommucation(byte[] b);
+        void startWriteCommucation(ArrayList<byte[]> b);
 
         void startReadCommucation();
 

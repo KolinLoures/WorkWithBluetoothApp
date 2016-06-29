@@ -10,6 +10,7 @@ import com.polidea.rxandroidble.RxBleConnection;
 import com.polidea.rxandroidble.RxBleDevice;
 import com.polidea.rxandroidble.utils.ConnectionSharingAdapter;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
 import javax.inject.Inject;
@@ -19,6 +20,8 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action0;
 import rx.functions.Action1;
 import rx.functions.Func1;
+import rx.functions.FuncN;
+import rx.schedulers.Schedulers;
 import rx.subjects.PublishSubject;
 
 /**
@@ -62,17 +65,17 @@ public class ConnectionPresenter implements ContractConnect.ConnPresenter {
 
     @Override
     public void connectBleDevice() {
-            connectionObservable.subscribe(new Action1<RxBleConnection>() {
-                        @Override
-                        public void call(RxBleConnection rxBleConnection) {
-                            onConnReceived();
-                        }
-                    }, new Action1<Throwable>() {
-                        @Override
-                        public void call(Throwable throwable) {
-                            onConnFail();
-                        }
-                    });
+        connectionObservable.subscribe(new Action1<RxBleConnection>() {
+            @Override
+            public void call(RxBleConnection rxBleConnection) {
+                onConnReceived();
+            }
+        }, new Action1<Throwable>() {
+            @Override
+            public void call(Throwable throwable) {
+                onConnFail();
+            }
+        });
         view.updateUI();
     }
 
@@ -126,34 +129,47 @@ public class ConnectionPresenter implements ContractConnect.ConnPresenter {
     }
 
     @Override
-    public void startWriteCommucation(final byte[] b) {
+    public void startWriteCommucation(final ArrayList<byte[]> b) {
         if (isConnected()){
-            connectionObservable
-                    .flatMap(new Func1<RxBleConnection, Observable<byte[]>>() {
-                        @Override
-                        public Observable<byte[]> call(final RxBleConnection rxBleConnection) {
-                            return rxBleConnection
-                                    .writeCharacteristic(BleDevice.characteristicWrite, b);
-                        }
-                    })
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(
-                            new Action1<byte[]>() {
-                                @Override
-                                public void call(byte[] o) {
-                                    view.setTextStatus("Success write");
+                connectionObservable
+                        .flatMap(new Func1<RxBleConnection, Observable<Observable<byte[]>>>() {
+                            @Override
+                            public Observable<Observable<byte[]>> call(RxBleConnection rxBleConnection) {
+                                final ArrayList<Observable<byte[]>> list = new ArrayList<>();
+                                for (byte[]  bytes: b){
+                                    list.add(rxBleConnection.writeCharacteristic(BleDevice.characteristicWrite, bytes));
+                                    Log.e("Observer", Arrays.toString(bytes));
                                 }
-                            },
-                            new Action1<Throwable>() {
-                                @Override
-                                public void call(Throwable throwable) {
-                                    view.setTextStatus("Fail write!");
-                                    throwable.printStackTrace();
-                                }
+                                return Observable.combineLatest(list, new FuncN<Observable<byte[]>>() {
+                                    @Override
+                                    public Observable<byte[]> call(Object... args) {
+                                        return Observable.from(list).flatMap(new Func1<Observable<byte[]>, Observable<byte[]>>() {
+                                            @Override
+                                            public Observable<byte[]> call(Observable<byte[]> observable) {
+                                                return observable;
+                                            }
+                                        });
+                                    }
+                                });
                             }
-                    );
-        }
+                        })
+                        .flatMap(new Func1<Observable<byte[]>, Observable<byte[]>>() {
+                            @Override
+                            public Observable<byte[]> call(Observable<byte[]> observable) {
+                                return observable.subscribeOn(Schedulers.io());
+                            }
+                        })
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(new Action1<byte[]>() {
+                            @Override
+                            public void call(byte[] bytes) {
+                                view.setTextStatus("Write success");
+                                Log.e("Subscriber", Arrays.toString(bytes));
+                            }
+                        });
+            }
     }
+
 
     @Override
     public void startReadCommucation(){
@@ -176,12 +192,13 @@ public class ConnectionPresenter implements ContractConnect.ConnPresenter {
                     .subscribe(new Action1<byte[]>() {
                         @Override
                         public void call(byte[] bytes) {
+                            Log.e("Read", Arrays.toString(bytes));
                             view.setOutText(Arrays.toString(bytes));
                         }
                     }, new Action1<Throwable>() {
                         @Override
                         public void call(Throwable throwable) {
-                            view.setOutText("fail read!");
+                            view.setOutText("!!!FAIL READ!!!");
                         }
                     });
 
@@ -191,15 +208,24 @@ public class ConnectionPresenter implements ContractConnect.ConnPresenter {
     @Override
     public void onClickStartCommucation() {
         Log.i("Start", "Start работай");
+//        startReadCommucation();
+        ArrayList<byte[]> listCmd = new ArrayList<>();
+        listCmd.clear();
+        listCmd.add(interactor.getCmdCommStartByte());
+        listCmd.add(interactor.getCmdBraceletVibroByte());
         startReadCommucation();
-        startWriteCommucation(interactor.getCmdCommStartByte());
+        startWriteCommucation(listCmd);
     }
 
     @Override
     public void onClickVibroCmd() {
         Log.i("Vibro", "Vibro работай");
         startReadCommucation();
-        startWriteCommucation(interactor.getCmdBraceletVibroByte());
+//        ArrayList<byte[]> listCmd = new ArrayList<>();
+////        listCmd.add(interactor.getCmdCommStartByte());
+//        listCmd.clear();
+//        listCmd.add(interactor.getCmdBraceletVibroByte());
+//        startWriteCommucation(listCmd);
     }
 
 
