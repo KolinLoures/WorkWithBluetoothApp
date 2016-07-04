@@ -12,6 +12,9 @@ import com.polidea.rxandroidble.utils.ConnectionSharingAdapter;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import javax.inject.Inject;
 
@@ -28,6 +31,8 @@ import rx.subjects.PublishSubject;
  * Created by n.kirilov on 22.06.2016.
  */
 public class ConnectionPresenter implements ContractConnect.ConnPresenter {
+
+    private int i = 0;
 
     @Inject
     Interactor interactor;
@@ -50,6 +55,12 @@ public class ConnectionPresenter implements ContractConnect.ConnPresenter {
         connectionObservable = device
                 .establishConnection(context, false)
                 .takeUntil(publishSubject)
+                .doOnRequest(new Action1<Long>() {
+                    @Override
+                    public void call(Long aLong) {
+                        startReadCommucation();
+                    }
+                })
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnUnsubscribe(new Action0() {
                     @Override
@@ -134,29 +145,20 @@ public class ConnectionPresenter implements ContractConnect.ConnPresenter {
                 connectionObservable
                         .flatMap(new Func1<RxBleConnection, Observable<Observable<byte[]>>>() {
                             @Override
-                            public Observable<Observable<byte[]>> call(RxBleConnection rxBleConnection) {
-                                final ArrayList<Observable<byte[]>> list = new ArrayList<>();
-                                for (byte[]  bytes: b){
-                                    list.add(rxBleConnection.writeCharacteristic(BleDevice.characteristicWrite, bytes));
+                            public Observable<Observable<byte[]>> call(final RxBleConnection rxBleConnection) {
+                                final List<Observable<byte[]>> list = new ArrayList<>();
+                                for (byte[] bytes: b){
                                     Log.e("Observer", Arrays.toString(bytes));
+                                    list.add(rxBleConnection
+                                            .writeCharacteristic(BleDevice.characteristicWrite, bytes));
                                 }
-                                return Observable.combineLatest(list, new FuncN<Observable<byte[]>>() {
-                                    @Override
-                                    public Observable<byte[]> call(Object... args) {
-                                        return Observable.from(list).flatMap(new Func1<Observable<byte[]>, Observable<byte[]>>() {
-                                            @Override
-                                            public Observable<byte[]> call(Observable<byte[]> observable) {
-                                                return observable;
-                                            }
-                                        });
-                                    }
-                                });
+                                return Observable.from(list);
                             }
                         })
-                        .flatMap(new Func1<Observable<byte[]>, Observable<byte[]>>() {
+                        .concatMap(new Func1<Observable<byte[]>, Observable<byte[]>>() {
                             @Override
                             public Observable<byte[]> call(Observable<byte[]> observable) {
-                                return observable.subscribeOn(Schedulers.io());
+                                return observable;
                             }
                         })
                         .observeOn(AndroidSchedulers.mainThread())
@@ -177,17 +179,17 @@ public class ConnectionPresenter implements ContractConnect.ConnPresenter {
             connectionObservable
                     .flatMap(new Func1<RxBleConnection, Observable<Observable<byte[]>>>() {
                         @Override
-                        public Observable<Observable<byte[]>> call(RxBleConnection rxBleConnection) {
-                            return rxBleConnection.setupNotification(BleDevice.characteristicRead);
+                        public Observable<Observable<byte[]>> call(final RxBleConnection rxBleConnection) {
+                            return rxBleConnection
+                                    .setupNotification(BleDevice.characteristicRead);
                         }
                     })
-                    .flatMap(new Func1<Observable<byte[]>, Observable<byte[]>>() {
-                                 @Override
-                                 public Observable<byte[]> call(Observable<byte[]> observable) {
-                                     return observable;
-                                 }
+                    .concatMap(new Func1<Observable<byte[]>, Observable<byte[]>>() {
+                        @Override
+                        public Observable<byte[]> call(Observable<byte[]> observable) {
+                            return observable;
                         }
-                    )
+                    })
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(new Action1<byte[]>() {
                         @Override
@@ -208,24 +210,15 @@ public class ConnectionPresenter implements ContractConnect.ConnPresenter {
     @Override
     public void onClickStartCommucation() {
         Log.i("Start", "Start работай");
-//        startReadCommucation();
         ArrayList<byte[]> listCmd = new ArrayList<>();
-        listCmd.clear();
         listCmd.add(interactor.getCmdCommStartByte());
         listCmd.add(interactor.getCmdBraceletVibroByte());
-        startReadCommucation();
         startWriteCommucation(listCmd);
     }
 
     @Override
     public void onClickVibroCmd() {
-        Log.i("Vibro", "Vibro работай");
-        startReadCommucation();
-//        ArrayList<byte[]> listCmd = new ArrayList<>();
-////        listCmd.add(interactor.getCmdCommStartByte());
-//        listCmd.clear();
-//        listCmd.add(interactor.getCmdBraceletVibroByte());
-//        startWriteCommucation(listCmd);
+
     }
 
 
