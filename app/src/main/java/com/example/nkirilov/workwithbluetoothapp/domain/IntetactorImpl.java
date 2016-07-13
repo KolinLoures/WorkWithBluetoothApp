@@ -3,6 +3,8 @@ package com.example.nkirilov.workwithbluetoothapp.domain;
 import com.example.nkirilov.workwithbluetoothapp.App;
 import com.example.nkirilov.workwithbluetoothapp.data.device.CmdBraceletVibro;
 import com.example.nkirilov.workwithbluetoothapp.data.device.CmdCommunicationStart;
+import com.example.nkirilov.workwithbluetoothapp.data.device.CmdReadDetailedActivityData;
+import com.example.nkirilov.workwithbluetoothapp.data.device.CmdRealTimeModeStart;
 import com.polidea.rxandroidble.RxBleDevice;
 import com.polidea.rxandroidble.RxBleScanResult;
 
@@ -46,4 +48,20 @@ public class IntetactorImpl implements Interactor{
         byte[] array = cmdCommunicationStart.getWriteValue();
         return array;
     }
+
+    @Override
+    public byte[] getCmdReadDetailedActivityData() {
+        CmdReadDetailedActivityData cmdReadDetailedActivityData = repository.getCmdReadDetailedActivityData();
+        byte[] array = cmdReadDetailedActivityData.getWriteValue();
+        return array;
+    }
+
+    @Override
+    public byte[] getCmdRealTimeModeStart() {
+        CmdRealTimeModeStart cmdRealTimeModeStart = repository.getCmdRealTimeModeStart();
+        byte[] array = cmdRealTimeModeStart.getWriteValue();
+        return array;
+    }
+
+
 }

@@ -4,6 +4,9 @@ import com.example.nkirilov.workwithbluetoothapp.presentation.connectDevice.Conn
 import com.example.nkirilov.workwithbluetoothapp.presentation.connectDevice.ContractConnect;
 import com.example.nkirilov.workwithbluetoothapp.presentation.search.Contarct;
 import com.example.nkirilov.workwithbluetoothapp.presentation.search.Presenter;
+import com.polidea.rxandroidble.RxBleConnection;
+
+import java.util.Queue;
 
 import javax.inject.Singleton;
 
@@ -29,10 +32,5 @@ public class PresentationModule {
         return new ConnectionPresenter();
     }
 
-    @Provides
-    @Singleton
-    PublishSubject<Void> providesTriggerSubject(){
-        return PublishSubject.create();
-    }
 
 }

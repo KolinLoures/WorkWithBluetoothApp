@@ -2,6 +2,8 @@ package com.example.nkirilov.workwithbluetoothapp.domain;
 
 import com.example.nkirilov.workwithbluetoothapp.data.device.CmdBraceletVibro;
 import com.example.nkirilov.workwithbluetoothapp.data.device.CmdCommunicationStart;
+import com.example.nkirilov.workwithbluetoothapp.data.device.CmdReadDetailedActivityData;
+import com.example.nkirilov.workwithbluetoothapp.data.device.CmdRealTimeModeStart;
 import com.polidea.rxandroidble.RxBleDevice;
 import com.polidea.rxandroidble.RxBleScanResult;
 
@@ -18,4 +20,8 @@ public interface IRepository {
     CmdBraceletVibro getCmdBraceletVibro();
 
     CmdCommunicationStart getCmdCommunicationStart();
+
+    CmdReadDetailedActivityData getCmdReadDetailedActivityData();
+
+    CmdRealTimeModeStart getCmdRealTimeModeStart();
 }

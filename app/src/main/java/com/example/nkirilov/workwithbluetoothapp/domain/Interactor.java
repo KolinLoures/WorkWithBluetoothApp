@@ -16,4 +16,8 @@ public interface Interactor {
     byte[] getCmdBraceletVibroByte();
 
     byte[] getCmdCommStartByte();
+
+    byte[] getCmdReadDetailedActivityData();
+
+    byte[] getCmdRealTimeModeStart();
 }

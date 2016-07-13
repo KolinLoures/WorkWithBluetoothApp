@@ -72,7 +72,7 @@ public class ConnnectionActivity extends AppCompatActivity implements ContractCo
                     presenter.onClickVibroCmd();
             }
         });
-//        btnVibro.setEnabled(false);
+        btnVibro.setEnabled(true);
 
     }
 
