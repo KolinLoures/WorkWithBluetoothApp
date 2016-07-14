@@ -11,7 +11,10 @@ import com.polidea.rxandroidble.RxBleDevice;
 import com.polidea.rxandroidble.utils.ConnectionSharingAdapter;
 
 import java.util.Arrays;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 import java.util.Queue;
 
 import javax.inject.Inject;
@@ -30,6 +33,7 @@ public class ConnectionPresenter implements ContractConnect.ConnPresenter {
 
     private int i = 0;
     private boolean flag = true;
+    private final int[] buffer = new int[]{1};
 
 
     @Inject
@@ -45,6 +49,7 @@ public class ConnectionPresenter implements ContractConnect.ConnPresenter {
     private Observable<RxBleConnection> connectionObservable;
     private ContractConnect.ConnView view;
     private Queue<byte[]> listCmd = new LinkedList<>();
+    private Map<byte[], Integer> map = new LinkedHashMap<>();
 
     public ConnectionPresenter() {
         App.getComponent().inject(this);
@@ -52,6 +57,11 @@ public class ConnectionPresenter implements ContractConnect.ConnPresenter {
 
     @Override
     public void createBleDevice(String macAddress) {
+        map.put(interactor.getCmdCommStartByte(), 1);
+        map.put(interactor.getCmdBraceletVibroByte(), 1);
+        map.put(interactor.getCmdRealTimeModeStart(), 1);
+        map.put(interactor.getCmdReadDetailedActivityData(), 96);
+
         device = interactor.getDevice(macAddress);
 
         publishSubject = PublishSubject.create();
@@ -117,6 +127,7 @@ public class ConnectionPresenter implements ContractConnect.ConnPresenter {
     @Override
     public void clearSub() {
         i = 0;
+        map.clear();
         connectionObservable = null;
         view.updateUI();
     }
@@ -151,7 +162,7 @@ public class ConnectionPresenter implements ContractConnect.ConnPresenter {
 
     @Override
     public void startWriteCommucation(final byte[] b) {
-
+        buffer[0] = map.get(b);
         if (isConnected()) {
             connectionObservable
                     .flatMap(new Func1<RxBleConnection, Observable<byte[]>>() {
@@ -180,12 +191,7 @@ public class ConnectionPresenter implements ContractConnect.ConnPresenter {
     }
 
 
-    /*
-
-   */
-
-
-    /*
+  /*
         connectionObservable
                     .flatMap(new Func1<RxBleConnection, Observable<byte[]>>() {
                         @Override
@@ -220,7 +226,7 @@ public class ConnectionPresenter implements ContractConnect.ConnPresenter {
     @Override
     public void startReadCommucation() {
         if (isConnected()) {
-
+            final int[] i = {0};
             connectionObservable
                     .flatMap(new Func1<RxBleConnection, Observable<Observable<byte[]>>>() {
                         @Override
@@ -239,9 +245,12 @@ public class ConnectionPresenter implements ContractConnect.ConnPresenter {
                     .subscribe(new Action1<byte[]>() {
                         @Override
                         public void call(byte[] bytes) {
+                            i[0]++;
                             Log.e("Read", Arrays.toString(bytes));
-                            view.setOutText(Arrays.toString(bytes));
-                            if (!listCmd.isEmpty()) {
+                            view.setOutText(Arrays.toString(bytes)+" - " + Arrays.toString(i));
+
+                            if (!listCmd.isEmpty() && i[0] == buffer[0]) {
+                                i[0] = 0;
                                 startWriteCommucation(listCmd.remove());
                             } else {
                                 flag = true;
@@ -258,8 +267,13 @@ public class ConnectionPresenter implements ContractConnect.ConnPresenter {
     }
 
     /*
-    Log.e("Read", Arrays.toString(bytes));
-                            view.setOutText(Arrays.toString(bytes));
+
+
+
+                            i[0]++;
+                            Log.e("Read", Arrays.toString(bytes));
+                            view.setOutText(Arrays.toString(bytes)+" - " + Arrays.toString(i));
+
                             if (!listCmd.isEmpty()) {
                                 startWriteCommucation(listCmd.remove());
                             } else {
@@ -274,7 +288,7 @@ public class ConnectionPresenter implements ContractConnect.ConnPresenter {
 
 
         listCmd.add(interactor.getCmdCommStartByte());
-//        listCmd.add(interactor.getCmdReadDetailedActivityData());
+        listCmd.add(interactor.getCmdReadDetailedActivityData());
         listCmd.add(interactor.getCmdBraceletVibroByte());
 //        listCmd.add(interactor.getCmdRealTimeModeStart());
 
@@ -282,9 +296,6 @@ public class ConnectionPresenter implements ContractConnect.ConnPresenter {
             flag = false;
             startWriteCommucation(listCmd.remove());
         }
-//        startWriteCommucation(listCmd.remove());
-
-
     }
 
     @Override
